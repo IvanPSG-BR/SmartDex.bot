@@ -7,11 +7,11 @@ load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
 permits = discord.Intents.default()
-permits.message_content = True
-bot = commands.Bot(command_prefix="!", intents=permits)
+permits.message_content = permits.members = True
+bot = commands.Bot(command_prefix="pk!", intents=permits)
 
 @bot.event
 async def on_ready():
-    print(f"Inicializado como {bot.user}")
+    print(f"{bot.user} Online!")
 
 bot.run(TOKEN)
