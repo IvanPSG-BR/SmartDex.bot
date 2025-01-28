@@ -1,11 +1,4 @@
 .env
-docs/tutorial.md
-docs/damage-calc-master.zip
-docs/Pokemon-Showdown-Dex-master.zip
-docs/pokemon-showdown-master.zip
-docs/Porygon-Z-master.zip
-
-docs/showdown_data_battle_analysis.json
-docs/showdown_data_meta_tips.json
-docs/showdown_data_pokemon_analysis.json
-docs/showdown_data_team_building.json
+zBaseDeDados/data.json
+zBaseDeDados/data.txt
+zBaseDeDados/json_formatter.py
