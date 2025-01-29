@@ -1,4 +1,4 @@
 .env
-zBaseDeDados/data.json
-zBaseDeDados/data.txt
-zBaseDeDados/json_formatter.py
+.vscode
+src/model_training
+src/services/dexter_ai.gguf
