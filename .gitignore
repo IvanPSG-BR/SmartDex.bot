@@ -2,3 +2,4 @@
 .vscode
 src/model_training
 src/services/dexter_ai.gguf
+pokemon_data.db
