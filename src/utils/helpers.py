@@ -11,5 +11,5 @@ def create_embed(title:str, desc:str, color:discord.Color, author_name="", autho
     return embed
 
 
-async def normalized_text(text:str):
-    await text.strip().lower()
+def normalized_text(text:str):
+    return text.strip().lower()

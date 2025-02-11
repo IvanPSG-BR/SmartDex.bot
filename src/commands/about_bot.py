@@ -1,6 +1,9 @@
 import discord
 from discord import app_commands
-from ..utils import helpers
+from src.utils import helpers
+from src.bot.client import bot
+from time import sleep
+first_command = True
 
 choice_options = ["pokedex", "search", "showdown", "official_games", "miscellaneous"]
 
@@ -55,11 +58,10 @@ misc_embed = helpers.create_embed(
 
 categories = {"Pokedex": pokedex_embed, "Busca": search_embed, "Showdown": showdown_embed, "Jogos Oficiais": ofcgames_embed, "Outros": misc_embed}
 
-@app_commands.command(name="about", description="Apresentação do bot")
 async def about(interact:discord.Interaction):
     main_embed = helpers.create_embed(
             title="Sobre mim",
-            desc=f"Olá {interact.user.name}, sou um bot criado **por** um pokefan **para** pokefans! Meu intuito é te ajudar em sua jornada, ou em suas batalhas competitivas\nPor que não tenta algum comando?",
+            desc=f"Olá {interact.user.name}, prazer em te conhecer! sou a {bot.user.name}, uma PokeAssistente criada **por** um fã **para** fãs! Meu objetivo é te ajudar em sua jornada, ou em suas batalhas competitivas\n\nPor que não tenta algum comando?",
             color=discord.Color.dark_blue(),
             author_name="BENTE_VII",
             author_link="https://github.com/IvanPSG-BR",
@@ -67,7 +69,8 @@ async def about(interact:discord.Interaction):
         )
     
     view = discord.ui.View()
-    pikachu_face_img = discord.File("images/pikachu_face.PNG", "pikachu_face.PNG")
+    pikachu_face_img = discord.File("media/pikachu_face.PNG", "pikachu_face.PNG")
+    about_smartdex_audio = discord.File("media/about_smartdex.mp3", "Sobre mim.mp3")
     for name, embed in categories.items():
         btn = discord.ui.Button(label=name)
         async def callback(interact:discord.Interaction, emb=embed):
@@ -76,11 +79,9 @@ async def about(interact:discord.Interaction):
         view.add_item(btn)
     
     try:   
-        await interact.response.send_message(file=pikachu_face_img, embed=main_embed, view=view)
+        await interact.followup.send(embed=main_embed, files=[pikachu_face_img, about_smartdex_audio], view=view)
     except Exception as e:
-        print(f"Erro no retorno da interação: {e}")
-
-
+        print(f"Erro no retorno da interação do Painel \"Sobre\": {e}")
 
 @app_commands.command(name="commands_list", description="Exibe comandos do bot")
 @app_commands.describe(commands_category="Categoria dos Comandos")
@@ -88,17 +89,22 @@ async def about(interact:discord.Interaction):
     app_commands.Choice(name=option, value=choice_options.index(option)) for option in choice_options
 ])
 async def commands_list(interact:discord.Interaction, commands_category:app_commands.Choice[int]):
-    response_msg = None
+    global first_command
     cvalue_list = list(categories.values())
     
     try:
         for option in choice_options:
             if commands_category.value == choice_options.index(option):
-                response_msg = interact.response.send_message(embed=cvalue_list[choice_options.index(option)], ephemeral=True)
-                break
+                if first_command:
+                    await interact.response.defer(thinking=True)
+                    first_command = False
+                    sleep(1.5)
+                    await interact.followup.send(embed=cvalue_list[choice_options.index(option)], ephemeral=True)
+                else:
+                    await interact.response.send_message(embed=cvalue_list[choice_options.index(option)], ephemeral=True)
                 
-        await response_msg
+                break
 
     except Exception as e:
-        print(f"Erro no retorno da interação: {e}")
+        print(f"Erro no retorno da interação do comando commands_list: {e}")
         
