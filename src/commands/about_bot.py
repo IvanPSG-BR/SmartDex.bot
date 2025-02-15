@@ -1,6 +1,6 @@
 import discord
 from discord import app_commands
-from src.utils import helpers
+from src.utils import helpers, classes
 from src.bot.client import bot
 from time import sleep
 first_command = True
@@ -68,15 +68,9 @@ async def about(interact:discord.Interaction):
             thumb="attachment://pikachu_face.PNG",
         )
     
-    view = discord.ui.View()
+    view = classes.Persistent_view(categories)
     pikachu_face_img = discord.File("media/pikachu_face.PNG", "pikachu_face.PNG")
     about_smartdex_audio = discord.File("media/about_smartdex.mp3", "Sobre mim.mp3")
-    for name, embed in categories.items():
-        btn = discord.ui.Button(label=name)
-        async def callback(interact:discord.Interaction, emb=embed):
-            await interact.response.send_message(embed=emb, ephemeral=True)
-        btn.callback = callback
-        view.add_item(btn)
     
     try:   
         await interact.followup.send(embed=main_embed, files=[pikachu_face_img, about_smartdex_audio], view=view)
